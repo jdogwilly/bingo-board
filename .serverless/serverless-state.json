@@ -120,7 +120,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/bingo-board/dev/1569270226562-2019-09-23T20:23:46.562Z/bingo-board.zip"
+                "S3Key": "serverless/bingo-board/dev/1569272533325-2019-09-23T21:02:13.325Z/bingo-board.zip"
               },
               "FunctionName": "bingo-board-dev-getBoard",
               "Handler": "bin/getBoard",
@@ -132,21 +132,26 @@
                 ]
               },
               "Runtime": "go1.x",
-              "Timeout": 6
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "db": "dev-bingoTable"
+                }
+              }
             },
             "DependsOn": [
               "GetBoardLogGroup",
               "IamRoleLambdaExecution"
             ]
           },
-          "GetBoardLambdaVersionaJQVrdPltG9YxCRyn232mcEFqzSXMS75c1TVDQLk": {
+          "GetBoardLambdaVersionM0RtI6ZekfLX9dCqyB6uK0ADU5ZO66GZBLrrxkMM1g": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetBoardLambdaFunction"
               },
-              "CodeSha256": "cNBKI1RykV25HDucGvvVdlZhmrdca/WIwMtEGCP43Og="
+              "CodeSha256": "dZcM1AknjUObosGbbZEzGIiC8h9BxElFtLbGeCTW+kg="
             }
           },
           "ApiGatewayRestApi": {
@@ -206,7 +211,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1569270224514": {
+          "ApiGatewayDeployment1569272531133": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -254,6 +259,25 @@
                 ]
               }
             }
+          },
+          "bingoTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "dev-bingoTable",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "boardName",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "boardName",
+                  "KeyType": "HASH"
+                }
+              ]
+            }
           }
         },
         "Outputs": {
@@ -265,7 +289,7 @@
           "GetBoardLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetBoardLambdaVersionaJQVrdPltG9YxCRyn232mcEFqzSXMS75c1TVDQLk"
+              "Ref": "GetBoardLambdaVersionM0RtI6ZekfLX9dCqyB6uK0ADU5ZO66GZBLrrxkMM1g"
             }
           },
           "ServiceEndpoint": {
@@ -338,6 +362,27 @@
     "functions": {
       "getBoard": {
         "handler": "bin/getBoard",
+        "environment": {
+          "db": "dev-bingoTable"
+        },
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "dynamodb:Scan",
+              "dynamodb:GetItem",
+              "dynamodb:Query"
+            ],
+            "Resource": [
+              {
+                "Fn::GetAtt": [
+                  "bingoTable",
+                  "Arn"
+                ]
+              }
+            ]
+          }
+        ],
         "events": [
           {
             "http": {
@@ -355,6 +400,30 @@
         "vpc": {}
       }
     },
+    "resources": {
+      "Resources": {
+        "bingoTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "TableName": "dev-bingoTable",
+            "BillingMode": "PAY_PER_REQUEST",
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "boardName",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "boardName",
+                "KeyType": "HASH"
+              }
+            ]
+          }
+        }
+      },
+      "Outputs": {}
+    },
     "serviceFilename": "serverless.yml",
     "tenant": "UA-ACM",
     "org": "UA-ACM",
@@ -362,7 +431,7 @@
     "artifact": "/home/jacobb/repos/acm/bingo-board/.serverless/bingo-board.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/bingo-board/dev/1569270226562-2019-09-23T20:23:46.562Z",
+    "artifactDirectoryName": "serverless/bingo-board/dev/1569272533325-2019-09-23T21:02:13.325Z",
     "artifact": "bingo-board.zip"
   }
 }

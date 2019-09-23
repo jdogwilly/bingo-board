@@ -20,11 +20,34 @@ package:
 functions:
   getBoard:
     handler: bin/getBoard
+    environment:
+      db: dev-bingoTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:Query
+        Resource:
+          - "Fn::GetAtt": [ bingoTable, Arn ]
     events:
       - http:
           path: /
           method: get
-
+  
+resources:
+  Resources:
+    bingoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: dev-bingoTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: boardName
+            AttributeType: S
+        KeySchema:
+          - AttributeName: boardName
+            KeyType: HASH
 
 custom:
   stage: ${opt:stage, self:provider.stage}
