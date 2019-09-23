@@ -10,3 +10,8 @@ There are some goals for this project
 Optional
 * [x] Running 100% serverless in AWS 
 * [x] Running for free
+
+
+This project uses the serverless framework to enable versioning of the infrastructure and for simple portability.
+For more on the serverless framework, checkout their [website](https://serverless.com/framework/docs/). 
+This project can be modified to run as a go server on a bare metal machine as well, though the project is focused on serverless.
