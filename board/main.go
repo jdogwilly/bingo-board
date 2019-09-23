@@ -68,6 +68,9 @@ var HTMLTemplate = `
 			</tr>
 		</table>
 	</div>
+	<div>
+		<p>See it on <a href="https://github.com/jdogwilly/bingo-board"> github</a></p>
+	</div>
 </body>
 `
 
