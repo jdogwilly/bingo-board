@@ -8,4 +8,5 @@ There are some goals for this project
 
 
 Optional
-* [x] Running 100% serverless in AWS (and likely for free)
+* [x] Running 100% serverless in AWS 
+* [x] Running for free
