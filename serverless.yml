@@ -1,0 +1,35 @@
+service: bingo-board
+org: UA-ACM
+plugins:
+  - serverless-domain-manager
+frameworkVersion: '>=1.28.0 <2.0.0'
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: dev
+  region: us-east-1
+  profile: personal
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  getBoard:
+    handler: bin/getBoard
+    events:
+      - http:
+          path: /
+          method: get
+
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  customDomain:
+    domainName: api.jbrookins.dev
+    basePath: 'bingo'
+    stage: "${self:custom.stage}"
+    createRoute53Record: true
